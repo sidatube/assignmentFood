@@ -66,9 +66,9 @@ public class UpdateCategoryServlet extends HttpServlet {
         cate.setCategoryName(cateName);
 
         model.update(id,cate);
-        session.setAttribute("success", "Update success");
-
-        req.getRequestDispatcher("/Admin/Categories/_id.jsp").forward(req, resp);
+//        session.setAttribute("success", "Update success");
+        resp.sendRedirect("/categories");
+//        req.getRequestDispatcher("/Admin/Categories/_id.jsp").forward(req, resp);
 
     }
 }

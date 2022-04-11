@@ -126,9 +126,9 @@
             <div class="form-row">
                 <div class="col-md-8 mb-3">
                     <label for="Description">Description</label>
-                    <input type="text" class="form-control" name="description" id="Description"
+                    <textarea  class="form-control" name="description" id="Description"
                            placeholder="Description"
-                    >
+                    ></textarea>
                     <div class="invalid-feedback">
                         Please enter description.
                     </div>
@@ -256,10 +256,10 @@
             <div class="form-row">
                 <div class="col-md-8 mb-3">
                     <label for="Description">Description</label>
-                    <input type="text" class="form-control" value="<%=food.getDescription()%>" name="description"
+                    <textarea class="form-control" name="description"
                            id="Description"
                            placeholder="Description"
-                    >
+                    ><%=food.getDescription()%></textarea>
                     <div class="invalid-feedback">
                         Please enter description.
                     </div>

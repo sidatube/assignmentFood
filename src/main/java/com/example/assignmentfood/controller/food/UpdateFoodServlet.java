@@ -110,7 +110,7 @@ public class UpdateFoodServlet extends HttpServlet {
             req.setAttribute("failure", "Updated fail");
         }
 
-        req.getRequestDispatcher("/Admin/Food/_id.jsp").forward(req, resp);
+//        req.getRequestDispatcher("/Admin/Food/_id.jsp").forward(req, resp);
 
     }
 }
