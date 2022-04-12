@@ -1,6 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.assignmentfood.entity.Category" %>
 <%@ page import="com.example.assignmentfood.ulti.PaginationSlave" %>
+<%@ page import="com.example.assignmentfood.entity.Account" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     ArrayList<Category> list = (ArrayList<Category>) request.getAttribute("listCategory");
@@ -16,6 +17,12 @@
         totalCount = (int) request.getAttribute("totalCate");
     } catch (Exception ignored) {
     }
+    Account account = (Account) session.getAttribute("currentUser");
+    boolean login = false;
+    if (account != null) {
+        login = true;
+    }
+    String Username = account == null ? "Guest" : account.getUsername();
 %>
 <html>
 <head>
@@ -39,9 +46,17 @@
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
     </li>
+    <li class="nav-item float-right">
+        <% if (login) {
+        %><%=Username%> <a href="/logout">(Logout)</a>
+        <%
+        } else {%>
+        <a href="/login">Login</a> or <a href="/register">Register</a>
+        <%}%>
+    </li>
 </ul>
 <div class="container">
-    <a href="/categories/create" class="btn btn-outline-primary float-right">Create</a>
+    <a href="/admin/categories/create" class="btn btn-outline-primary float-right">Create</a>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -60,9 +75,9 @@
             <td>
 <%--                <button>Detail</button>--%>
 <%--                <a href="/categories/detail?id=<%=cate.getId()%>" class="btn btn-outline-primary">Detail</a>--%>
-                <a href="/categories/update?id=<%=cate.getId()%>" class="btn btn-outline-success">Update</a>
+                <a href="/admin/categories/update?id=<%=cate.getId()%>" class="btn btn-outline-success">Update</a>
 
-                <a href="/categories/delete?id=<%=cate.getId()%>" class="btn btn-outline-danger btn-delete">Delete</a>
+                <a href="/admin/categories/delete?id=<%=cate.getId()%>" class="btn btn-outline-danger btn-delete">Delete</a>
             </td>
         </tr><%}%>
 

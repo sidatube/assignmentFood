@@ -3,6 +3,7 @@
 <%@ page import="com.example.assignmentfood.entity.Category" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="com.example.assignmentfood.ulti.PaginationSlave" %>
+<%@ page import="com.example.assignmentfood.entity.Account" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     ArrayList<Food> list = (ArrayList<Food>) request.getAttribute("listFood");
@@ -22,6 +23,12 @@
     if (list2 == null) {
         list2 = new HashMap<>();
     }
+    Account account = (Account) session.getAttribute("currentUser");
+    boolean login = false;
+    if (account != null) {
+        login = true;
+    }
+    String Username = account == null ? "Guest" : account.getUsername();
 %>
 <html>
 <head>
@@ -45,9 +52,17 @@
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
     </li>
+    <li class="nav-item float-right">
+        <% if (login) {
+        %><%=Username%> <a href="/logout">(Logout)</a>
+        <%
+        } else {%>
+        <a href="/login">Login</a> or <a href="/register">Register</a>
+        <%}%>
+    </li>
 </ul>
 <div class="container">
-    <a href="/foods/create" class="btn btn-outline-primary float-right">Create</a>
+    <a href="/admin/foods/create" class="btn btn-outline-primary float-right">Create</a>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -78,8 +93,8 @@
             <td>
                 <%--                <button>Detail</button>--%>
                 <a href="/foods/detail?id=<%=food.getId()%>" class="btn btn-outline-primary">Detail</a>
-                <a href="/foods/update?id=<%=food.getId()%>" class="btn btn-outline-success">Update</a>
-                <a href="/foods/delete?id=<%=food.getId()%>" class="btn btn-outline-danger btn-delete">Delete</a>
+                <a href="/admin/foods/update?id=<%=food.getId()%>" class="btn btn-outline-success">Update</a>
+                <a href="/admin/foods/delete?id=<%=food.getId()%>" class="btn btn-outline-danger btn-delete">Delete</a>
             </td>
         </tr>
         <%}%>

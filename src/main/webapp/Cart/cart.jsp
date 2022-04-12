@@ -1,6 +1,7 @@
 <%@ page import="com.example.assignmentfood.entity.Cart" %>
 <%@ page import="com.example.assignmentfood.entity.Food" %>
-<%@ page import="com.example.assignmentfood.entity.CartItem" %><%--
+<%@ page import="com.example.assignmentfood.entity.CartItem" %>
+<%@ page import="com.example.assignmentfood.entity.Account" %><%--
   Created by IntelliJ IDEA.
   User: DELL
   Date: 11/04/2022
@@ -16,6 +17,12 @@
     }
 
     double grandTotal=0;
+    Account account = (Account) session.getAttribute("currentUser");
+    boolean login = false;
+    if (account != null) {
+        login = true;
+    }
+    String Username = account == null ? "Guest" : account.getUsername();
 %>
 <html>
 <head>
@@ -38,6 +45,14 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
+    </li>
+    <li class="nav-item float-right">
+        <% if (login) {
+        %><%=Username%> <a href="/logout">(Logout)</a>
+        <%
+        } else {%>
+        <a href="/login">Login</a> or <a href="/register">Register</a>
+        <%}%>
     </li>
 </ul>
 <div class="container">

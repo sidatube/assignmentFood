@@ -1,4 +1,5 @@
 <%@ page import="com.example.assignmentfood.entity.Category" %>
+<%@ page import="com.example.assignmentfood.entity.Account" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     String errors = (String) session.getAttribute("errors");
@@ -9,6 +10,12 @@
     if (category == null) {
         category = new Category();
     }
+    Account account = (Account) session.getAttribute("currentUser");
+    boolean login = false;
+    if (account != null) {
+        login = true;
+    }
+    String Username = account == null ? "Guest" : account.getUsername();
 %>
 <html>
 
@@ -37,6 +44,14 @@
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
     </li>
+    <li class="nav-item float-right">
+        <% if (login) {
+        %><%=Username%> <a href="/logout">(Logout)</a>
+        <%
+        } else {%>
+        <a href="/login">Login</a> or <a href="/register">Register</a>
+        <%}%>
+    </li>
 </ul>
 <section class="section">
     <div class="container">
@@ -45,7 +60,7 @@
     <%
         if (category.getId() == 0) {
     %>
-        <form method="post" action="/categories/create" class="needs-validation" novalidate>
+        <form method="post" action="/admin/categories/create" class="needs-validation" novalidate>
             <div class="form-row">
                 <div class="col-md-8 mb-3">
                     <% if (!(success == null || success
@@ -77,7 +92,7 @@
         </form>
 
     <%} else {%>
-        <form method="post" action="/categories/update?id=<%=category.getId()%>" class="needs-validation" novalidate>
+        <form method="post" action="/admin/categories/update?id=<%=category.getId()%>" class="needs-validation" novalidate>
             <div class="form-row">
                 <div class="col-md-8 mb-3">
                     <input type="hidden" name="id" value="<%=category.getId()%>">

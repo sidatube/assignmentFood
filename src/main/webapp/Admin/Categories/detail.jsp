@@ -1,4 +1,4 @@
-<%--
+<%@ page import="com.example.assignmentfood.entity.Account" %><%--
   Created by IntelliJ IDEA.
   User: DELL
   Date: 07/04/2022
@@ -6,6 +6,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    Account account = (Account) session.getAttribute("currentUser");
+    boolean login = false;
+    if (account != null) {
+        login = true;
+    }
+    String Username = account == null ? "Guest" : account.getUsername();
+%>
 <html>
 <head>
     <title>Title</title>
@@ -27,6 +35,14 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
+    </li>
+    <li class="nav-item float-right">
+        <% if (login) {
+        %><%=Username%> <a href="/logout">(Logout)</a>
+        <%
+        } else {%>
+        <a href="/login">Login</a> or <a href="/register">Register</a>
+        <%}%>
     </li>
 </ul>
 <div class="container">

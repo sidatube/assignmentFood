@@ -1,4 +1,5 @@
-<%@ page import="com.example.assignmentfood.entity.Food" %><%--
+<%@ page import="com.example.assignmentfood.entity.Food" %>
+<%@ page import="com.example.assignmentfood.entity.Account" %><%--
   Created by IntelliJ IDEA.
   User: DELL
   Date: 07/04/2022
@@ -12,7 +13,14 @@
     Food food = (Food) request.getAttribute("food");
     if (food == null) {
         food = new Food();
-    }%>
+    }
+    Account account = (Account) session.getAttribute("currentUser");
+    boolean login = false;
+    if (account != null) {
+        login = true;
+    }
+    String Username = account == null ? "Guest" : account.getUsername();
+%>
 
 <html>
 <head>
@@ -36,6 +44,14 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
+    </li>
+    <li class="nav-item float-right">
+        <% if (login) {
+        %><%=Username%> <a href="/logout">(Logout)</a>
+        <%
+        } else {%>
+        <a href="/login">Login</a> or <a href="/register">Register</a>
+        <%}%>
     </li>
 </ul>
 

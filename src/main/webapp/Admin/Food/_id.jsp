@@ -2,6 +2,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.assignmentfood.entity.Category" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="com.example.assignmentfood.entity.Account" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     HashMap<String, String> errors = (HashMap<String, String>) request.getAttribute("errors");
@@ -18,7 +19,12 @@
     if (list == null) {
         list = new ArrayList<>();
     }
-
+    Account account = (Account) session.getAttribute("currentUser");
+    boolean login = false;
+    if (account != null) {
+        login = true;
+    }
+    String Username = account == null ? "Guest" : account.getUsername();
 %>
 <html>
 
@@ -52,6 +58,14 @@
     <li class="nav-item">
         <a class="nav-link" href="/cart">Cart</a>
     </li>
+    <li class="nav-item float-right">
+        <% if (login) {
+        %><%=Username%> <a href="/logout">(Logout)</a>
+        <%
+        } else {%>
+        <a href="/login">Login</a> or <a href="/register">Register</a>
+        <%}%>
+    </li>
 </ul>
 <section class="section">
     <div class="container">
@@ -60,7 +74,7 @@
         <%
             if (food.getId() == 0) {
         %>
-        <form method="post" action="/foods/create" class="needs-validation" name="form-submit" novalidate>
+        <form method="post" action="/admin/foods/create" class="needs-validation" name="form-submit" novalidate>
             <div class="form-row">
                 <div class="col-md-8 mb-3">
                     <% if (success != null) {
@@ -187,7 +201,7 @@
         </form>
 
         <%} else {%>
-        <form method="post" action="/foods/update?id=<%=food.getId()%>" name="form-submit" class="needs-validation"
+        <form method="post" action="/admin/foods/update?id=<%=food.getId()%>" name="form-submit" class="needs-validation"
               novalidate>
             <div class="form-row">
                 <input type="hidden" name="id" value="<%=food.getId()%>">
