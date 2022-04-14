@@ -1,9 +1,6 @@
 package com.example.assignmentfood.entity;
 
-import com.example.assignmentfood.annotation.Column;
-import com.example.assignmentfood.annotation.ForeignKey;
-import com.example.assignmentfood.annotation.Id;
-import com.example.assignmentfood.annotation.Table;
+import com.example.assignmentfood.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -18,6 +15,8 @@ public class Food {
     @ForeignKey(referenceColumn = "id", referenceTable = "categories")
     @Column(name = "categoryId", type = "INT")
     private int categoryId;
+    @Virtual
+    private Category category;
     @Column(name = "description", type = "TEXT(250)")
     private String description;
     @Column(name = "thumbnail", type = "TEXT")
@@ -44,6 +43,14 @@ public class Food {
     public HashMap<String, String> getErrors() {
         checkValid();
         return errors;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public void setErrors(HashMap<String, String> errors) {

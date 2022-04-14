@@ -41,4 +41,8 @@ public class ConfigSql {
     public static final String LIMIT = "LIMIT";
     public static final String SELECT_ACCOUNT_BY_USERNAME = "select * from accounts where username=?" ;
     public static final String LOCK_ACCOUNT = "update accounts set status=?,failureCount = ?,lockTime=? where username = ?" ;
+    public static final String INNER = "INNER";
+    public static final String JOIN = "JOIN";
+    public static final String ON = "ON";
+    public static final String PERIOD  = ".";
 }

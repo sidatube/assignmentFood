@@ -88,7 +88,7 @@
             <td><%=food.getDescription()%>
             </td>
             <td><%=food.getPrice()%> VND</td>
-            <td><%if (list2.containsKey(food.getCategoryId())) {%><%=list2.get(food.getCategoryId())%><%} else {%>No
+            <td><%if (food.getCategory()!=null) {%><%=food.getCategory().getCategoryName()%><%} else {%>No
                 category<%}%></td>
             <td>
                 <%--                <button>Detail</button>--%>
