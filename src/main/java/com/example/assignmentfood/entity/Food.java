@@ -90,6 +90,7 @@ public class Food {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", categoryId=" + categoryId +
+                ", category=" + category +
                 ", description='" + description + '\'' +
                 ", thumbnail='" + thumbnail + '\'' +
                 ", price=" + price +

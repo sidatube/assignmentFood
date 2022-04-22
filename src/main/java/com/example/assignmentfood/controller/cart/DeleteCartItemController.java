@@ -22,7 +22,7 @@ public class DeleteCartItemController extends HttpServlet {
         }catch (Exception e){
             resp.getWriter().println("Invalid Id");
         }
-        Food  obj = model.findById(id);
+        Food  obj = model.findByPF(id);
         if (obj == null) {
             resp.setStatus(404);
             resp.getWriter().println("Not found");

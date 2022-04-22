@@ -26,7 +26,7 @@ public class ConfigSql {
     public static final String SELECT = "SELECT";
     public static final String FROM = "FROM";
     public static final String WHERE = "WHERE";
-    public static final String ID = "ID";
+    public static final String ID = "id";
     public static final String EQUAL_SIGN = "=";
     public static final String INFORMATION_SCHEMA = "information_schema.tables ";
     public static final String SELECT_ALL = "SELECT * FROM";

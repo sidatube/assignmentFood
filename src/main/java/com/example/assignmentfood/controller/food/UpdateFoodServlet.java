@@ -32,7 +32,7 @@ public class UpdateFoodServlet extends HttpServlet {
             resp.getWriter().println("Is valid information");
             return;
         }
-        Food obj = model.findById(id);
+        Food obj = model.findByPF(id);
         if (obj == null) {
             resp.setStatus(404);
             resp.getWriter().println("Not found");
@@ -57,7 +57,7 @@ public class UpdateFoodServlet extends HttpServlet {
             resp.getWriter().println("Is valid information");
             return;
         }
-        Food obj = model.findById(id);
+        Food obj = model.findByPF(id);
         if (obj == null) {
             resp.setStatus(404);
             resp.getWriter().println("Not found");
@@ -95,7 +95,7 @@ public class UpdateFoodServlet extends HttpServlet {
         obj.setCategoryId(categoryId);
         HashMap<String, String> errors;
         errors = obj.getErrors();
-        if (model2.findById(categoryId) == null) {
+        if (model2.findByPF(categoryId) == null) {
             errors.put("categoryId", "Is valid category");
         }
         if (errors.size() > 0) {

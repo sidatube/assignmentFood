@@ -20,7 +20,7 @@ public class DeleteCategoryServlet extends HttpServlet {
         }catch (Exception e){
             resp.getWriter().println("Invalid Id");
         }
-        Category  obj = model.findById(id);
+        Category  obj = model.findByPF(id);
         if (obj == null) {
             resp.setStatus(404);
             resp.getWriter().println("Not found");

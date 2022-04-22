@@ -41,6 +41,7 @@ public class Category {
         return "Category{" +
                 "id=" + id +
                 ", categoryName='" + categoryName + '\'' +
+                ", status=" + status +
                 '}';
     }
 

@@ -148,7 +148,7 @@ public class UltraModel<T> {
             }
             getList.append(tableName);
             getList.append(ConfigSql.SPACE);
-            for (Field field : type.getDeclaredFields() ) {
+            for (Field field : type.getDeclaredFields()) {
                 if (field.isAnnotationPresent(Virtual.class)) {
                     Class<?> typeVirtual = field.getType();
                     if (typeVirtual.isAnnotationPresent(Table.class)) {
@@ -198,6 +198,7 @@ public class UltraModel<T> {
         }
         return list;
     }
+
     public List<T> getList(int pageIndex) {
         List<T> list = new ArrayList<>();
         try {
@@ -216,7 +217,7 @@ public class UltraModel<T> {
             }
             getList.append(tableName);
             getList.append(ConfigSql.SPACE);
-            for (Field field : type.getDeclaredFields() ) {
+            for (Field field : type.getDeclaredFields()) {
                 if (field.isAnnotationPresent(Virtual.class)) {
                     Class<?> typeVirtual = field.getType();
                     if (typeVirtual.isAnnotationPresent(Table.class)) {
@@ -278,13 +279,48 @@ public class UltraModel<T> {
             if (!type.isAnnotationPresent(Table.class)) {
                 return list;
             }
+            String tableName = "";
             Table table = (Table) type.getDeclaredAnnotation(Table.class);
             if (table.name().length() > 0) {
-                getList.append(table.name());
+                tableName = table.name();
             } else {
-                getList.append(type.getSimpleName().toLowerCase()).append("s");
+                tableName = type.getSimpleName().toLowerCase() + "s";
             }
+            getList.append(tableName);
             getList.append(ConfigSql.SPACE);
+            for (Field field : type.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Virtual.class)) {
+                    Class<?> typeVirtual = field.getType();
+                    if (typeVirtual.isAnnotationPresent(Table.class)) {
+
+                        String tableVirtualName = "";
+                        getList.append(ConfigSql.INNER);
+                        getList.append(ConfigSql.SPACE);
+                        getList.append(ConfigSql.JOIN);
+                        getList.append(ConfigSql.SPACE);
+                        Table tableVirtual = (Table) typeVirtual.getDeclaredAnnotation(Table.class);
+                        if (tableVirtual.name().length() > 0) {
+                            tableVirtualName = tableVirtual.name();
+                        } else {
+                            tableVirtualName = typeVirtual.getSimpleName().toLowerCase() + 's';
+                        }
+                        getList.append(tableVirtualName);
+                        getList.append(ConfigSql.SPACE);
+                        getList.append(ConfigSql.ON);
+                        getList.append(ConfigSql.SPACE);
+                        getList.append(tableName);
+                        getList.append(ConfigSql.PERIOD);
+                        getList.append(Objects.requireNonNull(getForeignKeyField(type)).getName());
+                        getList.append(ConfigSql.EQUAL_SIGN);
+                        getList.append(tableVirtualName);
+                        getList.append(ConfigSql.PERIOD);
+                        getList.append(Objects.requireNonNull(getPrimaryKeyField(typeVirtual)).getName());
+                        getList.append(ConfigSql.SPACE);
+                    }
+                }
+
+            }
+
             Statement stt = connection.createStatement();
             ResultSet rst = stt.executeQuery(getList.toString());
             while (rst.next()) {
@@ -298,7 +334,7 @@ public class UltraModel<T> {
         return list;
     }
 
-    public T findById(int id) {
+    public T findByPF(Object id) {
         T obj = null;
         try {
             StringBuilder getObj = new StringBuilder();
@@ -307,18 +343,56 @@ public class UltraModel<T> {
             if (!type.isAnnotationPresent(Table.class)) {
                 return null;
             }
+            String tableName = "";
             Table table = (Table) type.getDeclaredAnnotation(Table.class);
             if (table.name().length() > 0) {
-                getObj.append(table.name());
+                tableName = table.name();
             } else {
-                getObj.append(type.getSimpleName().toLowerCase()).append("s");
+                tableName = type.getSimpleName().toLowerCase() + "s";
             }
+            getObj.append(tableName);
             getObj.append(ConfigSql.SPACE);
+            for (Field field : type.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Id.class)) {
+                    id = caster(id, type);
+                }
+                if (field.isAnnotationPresent(Virtual.class)) {
+                    Class<?> typeVirtual = field.getType();
+                    if (typeVirtual.isAnnotationPresent(Table.class)) {
+
+                        String tableVirtualName = "";
+                        getObj.append(ConfigSql.INNER);
+                        getObj.append(ConfigSql.SPACE);
+                        getObj.append(ConfigSql.JOIN);
+                        getObj.append(ConfigSql.SPACE);
+                        Table tableVirtual = (Table) typeVirtual.getDeclaredAnnotation(Table.class);
+                        if (tableVirtual.name().length() > 0) {
+                            tableVirtualName = tableVirtual.name();
+                        } else {
+                            tableVirtualName = typeVirtual.getSimpleName().toLowerCase() + 's';
+                        }
+                        getObj.append(tableVirtualName);
+                        getObj.append(ConfigSql.SPACE);
+                        getObj.append(ConfigSql.ON);
+                        getObj.append(ConfigSql.SPACE);
+                        getObj.append(tableName);
+                        getObj.append(ConfigSql.PERIOD);
+                        getObj.append(Objects.requireNonNull(getForeignKeyField(type)).getName());
+                        getObj.append(ConfigSql.EQUAL_SIGN);
+                        getObj.append(tableVirtualName);
+                        getObj.append(ConfigSql.PERIOD);
+                        getObj.append(Objects.requireNonNull(getPrimaryKeyField(typeVirtual)).getName());
+                        getObj.append(ConfigSql.SPACE);
+                    }
+                }
+
+            }
             getObj.append(ConfigSql.WHERE);
             getObj.append(ConfigSql.SPACE);
-            getObj.append(ConfigSql.ID);
+            getObj.append(Objects.requireNonNull(getPrimaryKeyField(type)).getName());
             getObj.append(ConfigSql.EQUAL_SIGN);
             getObj.append(id);
+            System.out.println(getObj.toString());
             PreparedStatement stt = connection.prepareStatement(getObj.toString());
             ResultSet rst = stt.executeQuery();
             while (rst.next()) {
@@ -352,16 +426,51 @@ public class UltraModel<T> {
             if (objField == null) {
                 return null;
             }
+            String tableName = "";
             Table table = (Table) type.getDeclaredAnnotation(Table.class);
             if (table.name().length() > 0) {
-                getObj.append(table.name());
+                tableName = table.name();
             } else {
-                getObj.append(type.getSimpleName().toLowerCase()).append("s");
+                tableName = type.getSimpleName().toLowerCase() + "s";
             }
+            getObj.append(tableName);
             Column column = objField.getDeclaredAnnotation(Column.class);
 
             objField.setAccessible(true);
             getObj.append(ConfigSql.SPACE);
+            for (Field field : type.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Virtual.class)) {
+                    Class<?> typeVirtual = field.getType();
+                    if (typeVirtual.isAnnotationPresent(Table.class)) {
+
+                        String tableVirtualName = "";
+                        getObj.append(ConfigSql.INNER);
+                        getObj.append(ConfigSql.SPACE);
+                        getObj.append(ConfigSql.JOIN);
+                        getObj.append(ConfigSql.SPACE);
+                        Table tableVirtual = (Table) typeVirtual.getDeclaredAnnotation(Table.class);
+                        if (tableVirtual.name().length() > 0) {
+                            tableVirtualName = tableVirtual.name();
+                        } else {
+                            tableVirtualName = typeVirtual.getSimpleName().toLowerCase() + 's';
+                        }
+                        getObj.append(tableVirtualName);
+                        getObj.append(ConfigSql.SPACE);
+                        getObj.append(ConfigSql.ON);
+                        getObj.append(ConfigSql.SPACE);
+                        getObj.append(tableName);
+                        getObj.append(ConfigSql.PERIOD);
+                        getObj.append(Objects.requireNonNull(getForeignKeyField(type)).getName());
+                        getObj.append(ConfigSql.EQUAL_SIGN);
+                        getObj.append(tableVirtualName);
+                        getObj.append(ConfigSql.PERIOD);
+                        getObj.append(Objects.requireNonNull(getPrimaryKeyField(typeVirtual)).getName());
+                        getObj.append(ConfigSql.SPACE);
+                    }
+                }
+
+            }
+
             getObj.append(ConfigSql.WHERE);
             getObj.append(ConfigSql.SPACE);
             getObj.append(columnName);
@@ -521,18 +630,20 @@ public class UltraModel<T> {
             if (field.isAnnotationPresent(Virtual.class)) {
                 Class<?> type2 = field.getType();
                 if (type2.isAnnotationPresent(Table.class)) {
+                    Table tableVirtual = (Table) type2.getDeclaredAnnotation(Table.class);
                     try {
                         Object newObj = type2.newInstance();
                         for (Field field1 : type2.getDeclaredFields()) {
                             field1.setAccessible(true);
                             if (field1.isAnnotationPresent(Column.class)) {
                                 Column column1 = field1.getDeclaredAnnotation(Column.class);
-                                Object valueVirtual = rst.getObject(column1.name());
+                                Object valueVirtual = rst.getObject(tableVirtual.name() + ConfigSql.PERIOD + column1.name());
                                 Class<?> typeVirtual = field.getType();
-                                if (typeVirtual.isPrimitive()) {
-                                    Class<?> boxed = boxPrimitveClass(typeVirtual);
-                                    valueVirtual = boxed.cast(valueVirtual);
-                                }
+                                valueVirtual = caster(valueVirtual, typeVirtual);
+//                                if (typeVirtual.isPrimitive()) {
+//                                    Class<?> boxed = boxPrimitveClass(typeVirtual);
+//                                    valueVirtual = boxed.cast(valueVirtual);
+//                                }
                                 field1.set(newObj, valueVirtual);
                             }
                         }
@@ -549,6 +660,14 @@ public class UltraModel<T> {
         }
     }
 
+    private Object caster(Object val, Class typeField) {
+        if (typeField.isPrimitive()) {
+            Class<?> boxed = boxPrimitveClass(typeField);
+            return boxed.cast(val);
+        }
+        return null;
+    }
+
     private Field getForeignKeyField(Class tableClass) {
         if (!tableClass.isAnnotationPresent(Table.class)) {
             return null;
@@ -563,6 +682,7 @@ public class UltraModel<T> {
         }
         return null;
     }
+
     private Field getPrimaryKeyField(Class tableClass) {
         if (!tableClass.isAnnotationPresent(Table.class)) {
             return null;
@@ -577,6 +697,7 @@ public class UltraModel<T> {
         }
         return null;
     }
+
     private Class<?> boxPrimitveClass(Class<?> type) {
         if (type == int.class) {
             return Integer.class;

@@ -63,7 +63,7 @@ public class CreateFoodServlet extends HttpServlet {
         food.setCategoryId(categoryId);
         HashMap<String, String> errors;
         errors = food.getErrors();
-        if (model2.findById(categoryId) == null) {
+        if (model2.findByPF(categoryId) == null) {
             errors.put("categoryId", "Is valid category");
         }
         if (errors.size() > 0) {

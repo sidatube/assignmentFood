@@ -30,7 +30,7 @@ public class AddToCartController extends HttpServlet {
             resp.getWriter().println("Invalid Info");
             return;
         }
-        Food food = model.findById(id);
+        Food food = model.findByPF(id);
         if (food==null){
             resp.setStatus(404);
             resp.getWriter().println("Food is not exist");

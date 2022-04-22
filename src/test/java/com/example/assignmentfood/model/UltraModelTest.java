@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,16 +18,17 @@ class UltraModelTest {
 //        UltraModel<Category> model2 = new UltraModel<>(Category.class);
 //        model2.save(new Category(1,"ASD"));
         UltraModel<Food> model = new UltraModel<>(Food.class);
-        Food food = model.findById(1);
-        food.setUpdatedAt(null);
-        food.setCreatedAt(food.getCreatedAt());
-//        food.setCreatedAt(null);
-        model.update(food.getId(),food);
+       model.getList(1);
+//        food.setUpdatedAt(null);
+//        food.setCreatedAt(food.getCreatedAt());
+////        food.setCreatedAt(null);
+//        model.update(food.getId(),food);
     }
 
     @Test
     void findByColumns() {
-        UltraModel<Category> model2 = new UltraModel<>(Category.class);
-        System.out.println(model2.findByColumns("categoryName",new Category(0,"ASD")));
+        UltraModel<Food> model2 = new UltraModel<>(Food.class);
+        System.out.println(model2.findByPF(2));;
+//        System.out.println(model2.findByColumns("categoryName",new Category(0,"ASD")));
     }
 }

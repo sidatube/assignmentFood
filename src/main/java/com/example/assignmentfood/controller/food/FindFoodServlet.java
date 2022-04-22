@@ -30,7 +30,7 @@ public class FindFoodServlet extends HttpServlet {
             resp.getWriter().println("Is valid information");
             return;
         }
-        Food obj = model.findById(id);
+        Food obj = model.findByPF(id);
         if (obj == null) {
             resp.setStatus(404);
             resp.getWriter().println("Not found");

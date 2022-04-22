@@ -30,7 +30,7 @@ public class UpdateCategoryServlet extends HttpServlet {
             resp.getWriter().println("Is valid information");
             return;
         }
-        Category obj=model.findById(id);
+        Category obj=model.findByPF(id);
         if (obj==null){
             resp.setStatus(404);
             resp.getWriter().println("Not found");
