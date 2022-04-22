@@ -389,6 +389,8 @@ public class UltraModel<T> {
             }
             getObj.append(ConfigSql.WHERE);
             getObj.append(ConfigSql.SPACE);
+            getObj.append(tableName);
+            getObj.append(ConfigSql.PERIOD);
             getObj.append(Objects.requireNonNull(getPrimaryKeyField(type)).getName());
             getObj.append(ConfigSql.EQUAL_SIGN);
             getObj.append(id);
@@ -638,7 +640,7 @@ public class UltraModel<T> {
                             if (field1.isAnnotationPresent(Column.class)) {
                                 Column column1 = field1.getDeclaredAnnotation(Column.class);
                                 Object valueVirtual = rst.getObject(tableVirtual.name() + ConfigSql.PERIOD + column1.name());
-                                Class<?> typeVirtual = field.getType();
+                                Class<?> typeVirtual = field1.getType();
                                 valueVirtual = caster(valueVirtual, typeVirtual);
 //                                if (typeVirtual.isPrimitive()) {
 //                                    Class<?> boxed = boxPrimitveClass(typeVirtual);
@@ -665,7 +667,7 @@ public class UltraModel<T> {
             Class<?> boxed = boxPrimitveClass(typeField);
             return boxed.cast(val);
         }
-        return null;
+        return val;
     }
 
     private Field getForeignKeyField(Class tableClass) {

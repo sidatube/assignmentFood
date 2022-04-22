@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     ArrayList<Category> list = (ArrayList<Category>) request.getAttribute("listCategory");
-    if (list==null){
+    if (list == null) {
         list = new ArrayList<>();
     }
     int pageIndex = 1;
@@ -19,8 +19,12 @@
     }
     Account account = (Account) session.getAttribute("currentUser");
     boolean login = false;
+    boolean isAdmin = false;
     if (account != null) {
         login = true;
+        if (account.getRole() == 2) {
+            isAdmin = true;
+        }
     }
     String Username = account == null ? "Guest" : account.getUsername();
 %>
@@ -56,36 +60,54 @@
     </li>
 </ul>
 <div class="container">
+    <%
+        if (isAdmin) {
+    %>
     <a href="/admin/categories/create" class="btn btn-outline-primary float-right">Create</a>
+    <%}%>
     <table class="table table-striped">
         <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Category name</th>
+            <%
+                if (isAdmin) {
+            %>
             <th scope="col">Action</th>
+            <%}%>
+
         </tr>
         </thead>
         <tbody>
         <%
-            for (Category cate: list
-                 ){%>
+            for (Category cate : list
+            ) {%>
         <tr>
-            <td><%=cate.getId()%></td>
-            <td><%=cate.getCategoryName()%></td>
+            <td><%=cate.getId()%>
+            </td>
+            <td><%=cate.getCategoryName()%>
+            </td>
+
+            <%
+                if (isAdmin) {
+            %>
             <td>
-<%--                <button>Detail</button>--%>
-<%--                <a href="/categories/detail?id=<%=cate.getId()%>" class="btn btn-outline-primary">Detail</a>--%>
                 <a href="/admin/categories/update?id=<%=cate.getId()%>" class="btn btn-outline-success">Update</a>
 
-                <a href="/admin/categories/delete?id=<%=cate.getId()%>" class="btn btn-outline-danger btn-delete">Delete</a>
+                <a href="/admin/categories/delete?id=<%=cate.getId()%>"
+                   class="btn btn-outline-danger btn-delete">Delete</a>
             </td>
-        </tr><%}%>
+            <%}%>
+
+
+        </tr>
+        <%}%>
 
 
         </tbody>
     </table>
     <%
-        if ( ((float)totalCount / PaginationSlave.pageSize) > 1) {
+        if (((float) totalCount / PaginationSlave.pageSize) > 1) {
     %>
     <nav aria-label="...">
         <ul class="pagination">

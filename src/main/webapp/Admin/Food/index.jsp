@@ -1,7 +1,5 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.assignmentfood.entity.Food" %>
-<%@ page import="com.example.assignmentfood.entity.Category" %>
-<%@ page import="java.util.HashMap" %>
 <%@ page import="com.example.assignmentfood.ulti.PaginationSlave" %>
 <%@ page import="com.example.assignmentfood.entity.Account" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -19,14 +17,14 @@
     if (list == null) {
         list = new ArrayList<>();
     }
-    HashMap<Integer, Category> list2 = (HashMap<Integer, Category>) request.getAttribute("listCate");
-    if (list2 == null) {
-        list2 = new HashMap<>();
-    }
     Account account = (Account) session.getAttribute("currentUser");
     boolean login = false;
+    boolean isAdmin = false;
     if (account != null) {
         login = true;
+        if (account.getRole()==2){
+            isAdmin=true;
+        }
     }
     String Username = account == null ? "Guest" : account.getUsername();
 %>
@@ -62,7 +60,12 @@
     </li>
 </ul>
 <div class="container">
+    <%
+        if (isAdmin) {
+    %>
     <a href="/admin/foods/create" class="btn btn-outline-primary float-right">Create</a>
+    <%
+        }%>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -88,13 +91,19 @@
             <td><%=food.getDescription()%>
             </td>
             <td><%=food.getPrice()%> VND</td>
-            <td><%if (food.getCategory()!=null) {%><%=food.getCategory().getCategoryName()%><%} else {%>No
+            <td><%if (food.getCategory() != null) {%><%=food.getCategory().getCategoryName()%><%} else {%>No
                 category<%}%></td>
             <td>
                 <%--                <button>Detail</button>--%>
                 <a href="/foods/detail?id=<%=food.getId()%>" class="btn btn-outline-primary">Detail</a>
+                <%
+                    if (isAdmin) {
+                %>
                 <a href="/admin/foods/update?id=<%=food.getId()%>" class="btn btn-outline-success">Update</a>
-                <a href="/admin/foods/delete?id=<%=food.getId()%>" class="btn btn-outline-danger btn-delete">Delete</a>
+                <a href="/admin/foods/delete?id=<%=food.getId()%>"
+                   class="btn btn-outline-danger btn-delete">Delete</a> <%
+                }%>
+
             </td>
         </tr>
         <%}%>
